@@ -53,6 +53,29 @@ BUILTIN_TEMPLATES: list[dict] = [
         ),
     },
     {
+        "slug": "letterhead",
+        "name": "Letterhead",
+        "icon": "building",
+        "description": "Official letter on company letterhead with contact header and footer.",
+        "instructions": (
+            "Format as an official letter on company letterhead.\n"
+            "Letterhead: an H1 with the organisation's name; an italic tagline line under it if one "
+            "exists; one line of contact details (address, phone, email, website: only those present) "
+            "separated by ' | '; then a horizontal rule (---).\n"
+            "Letter: a '**Ref:** ...' line if a reference number exists; the date; the recipient's name, "
+            "title, organisation and address with one item per line; an optional '**Subject:** ...' line; "
+            "the salutation; body paragraphs in a professional tone; the closing (e.g. 'Yours sincerely,'); "
+            "and a signature block: the signer's name in bold, then title and organisation on separate "
+            "lines.\n"
+            "Footer: if the source has registration numbers, other office addresses or legal footer text, "
+            "add a final horizontal rule followed by them in one short paragraph.\n"
+            "Markdown: to keep lines of one block on separate lines, end each line except the last with "
+            "two spaces. Never use HTML such as <br>. Leave a blank line before and after every horizontal "
+            "rule. Use no headings other than the H1. Omit any letterhead field that is missing from the "
+            "source."
+        ),
+    },
+    {
         "slug": "professional-email",
         "name": "Professional Email",
         "icon": "send",
@@ -124,6 +147,40 @@ BUILTIN_TEMPLATES: list[dict] = [
             "1.2.1) as plain paragraphs. Bold defined terms where they are defined, and add a "
             "'Definitions' section if terms are defined in the source. Keep wording precise; do not "
             "change legal meaning."
+        ),
+    },
+    {
+        "slug": "contract",
+        "name": "Contract / Agreement",
+        "icon": "handshake",
+        "description": "Parties, recitals, numbered clauses, schedules and a signature block.",
+        "instructions": (
+            "Format as a contract or agreement.\n"
+            "Opening: an H1 title in capitals (use the source's title, e.g. 'SERVICE AGREEMENT'); then a "
+            "paragraph giving the agreement date and the parties, each party's name in bold with only the "
+            "details the source gives (such as address or registration number) and its short name in "
+            'quotes, e.g. (the "Client"). If the source has background or recitals, add an H2 '
+            "'Background' with lettered paragraphs (A., B.), one per point in the source.\n"
+            "Body: numbered H2 clauses ('1. Definitions', '2. Services', ...) in the source's order. Each "
+            "sub-clause (1.1, 1.2, 1.2.1) is its own paragraph, separated by a blank line and starting "
+            "with its number in bold; list items inside a sub-clause use (a), (b), (c). Each point from "
+            "the source appears exactly once, in the clause it belongs to. Bold each defined term where "
+            "it is defined. Add a 'Definitions' clause only if the source explicitly defines terms (e.g. "
+            "\"'X' means ...\"), and include only those definitions. Put payment schedules, milestones and "
+            "deliverables in tables, using only the columns and values the source gives: if the source "
+            "states instalments as percentages, the table shows the percentages, with no computed "
+            "amounts. Put schedules or annexes after the clauses as H2 'Schedule 1 - <name>'.\n"
+            "Execution: after the last clause, with no heading or clause number, write 'IN WITNESS "
+            "WHEREOF, the parties have signed this Agreement on the date first written above.' and then a "
+            "table whose header row is a blank cell followed by each party's name, and whose rows are "
+            "Signature, Name, Title and Date. Fill in only details present in the source and leave the "
+            "other cells blank.\n"
+            "Accuracy (most important): this is a legal document. Restructure and number the source text, "
+            "but do not add any clause, sentence, definition, recital, obligation or description of a party "
+            "(such as its company type or the law it is incorporated under) that is not in the source, and "
+            "never remove or soften an obligation. Copy every amount, percentage and date exactly as "
+            "written, keeping the source's number format (e.g. Indian grouping 6,00,000), and never "
+            "calculate new figures. Do not use HTML or entities such as &nbsp;."
         ),
     },
     {

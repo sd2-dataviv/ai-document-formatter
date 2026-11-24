@@ -138,9 +138,35 @@ def split_into_chunks(text: str, max_chars: int) -> list[str]:
 _FENCE_RE = re.compile(r"^\s*```(?:markdown|md)?\s*\n(.*?)\n```\s*$", re.DOTALL | re.IGNORECASE)
 
 
+_LINE_FENCE_RE = re.compile(r"^\s*(```|~~~)")
+# A trailing <br> (sometimes escaped as \<br>): react-markdown shows raw HTML as literal text.
+_TRAILING_BR_RE = re.compile(r"\s*\\?<br\s*/?>\s*$", re.IGNORECASE)
+_DASH_RULE_RE = re.compile(r"^ {0,3}-[ \t]*-[ \t]*-[ \t-]*$")
+# Hyphen / non-breaking hyphen: gpt-oss likes them, but common PDF fonts (Arial) have no glyph.
+_CHAR_FIXES = str.maketrans({"‐": "-", "‑": "-"})
+
+
 def clean_output(markdown: str) -> str:
-    """Remove a code fence the model sometimes wraps around the whole document."""
+    """Normalise model output: unwrap a whole-document code fence and fix Markdown slips.
+
+    Outside code blocks: a trailing ``<br>`` becomes a real Markdown line break, and a ``---``
+    rule directly under a text line gets a blank line first (otherwise Markdown turns the text
+    above it into a heading).
+    """
     md = markdown.strip()
     if m := _FENCE_RE.match(md):
         md = m.group(1).strip()
-    return md
+    md = md.translate(_CHAR_FIXES)
+
+    out: list[str] = []
+    in_code = False
+    for line in md.split("\n"):
+        if _LINE_FENCE_RE.match(line):
+            in_code = not in_code
+        elif not in_code:
+            if _TRAILING_BR_RE.search(line):
+                line = _TRAILING_BR_RE.sub("  ", line)
+            if _DASH_RULE_RE.match(line) and out and out[-1].strip():
+                out.append("")
+        out.append(line)
+    return "\n".join(out)

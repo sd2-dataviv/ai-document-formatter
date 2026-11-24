@@ -41,6 +41,15 @@ def test_context_window_is_power_of_two_and_bounded():
         ("```markdown\n# Hi\n```", "# Hi"),
         ("```md\n# Hi\n\ntext\n```\n", "# Hi\n\ntext"),
         ("# Hi\n\n```python\nx=1\n```", "# Hi\n\n```python\nx=1\n```"),
+        # Trailing <br> (plain or escaped) becomes a Markdown hard break
+        ("Mr A <br>\nHead \\<br>\nAcme<br/>\nLast", "Mr A  \nHead  \nAcme  \nLast"),
+        # A rule directly under text must not turn that text into a setext heading
+        ("# Co\nline one  \nline two  \n---  \nbody", "# Co\nline one  \nline two  \n\n---  \nbody"),
+        ("text\n\n---\nmore", "text\n\n---\nmore"),
+        ("| a | b |\n|---|---|", "| a | b |\n|---|---|"),
+        # Code blocks are left exactly as written
+        ("Config:\n\n```yaml\nkey: x <br>\n---\n```", "Config:\n\n```yaml\nkey: x <br>\n---\n```"),
+        ("Go\u2011Live on\u202f1 May", "Go-Live on\u202f1 May"),
     ],
 )
 def test_clean_output(raw, expected):
@@ -90,6 +99,18 @@ def test_docx_export_structure():
 def test_pdf_export_handles_tables_with_empty_cells():
     pdf = markdown_to_pdf("# T\n\n| A | B |\n|---|---|\n| 1 |  |\n\n- [x] done", "t")
     assert pdf.startswith(b"%PDF")
+
+
+def test_exports_render_table_directly_after_paragraph():
+    # GFM / the in-app preview allow a table to interrupt a paragraph; exports must match.
+    md = "**3.2** Payment as follows:  \n| Instalment | Trigger |\n|---|---|\n| 30% | On signing |"
+    html = markdown_to_html(md, "t")
+    assert "<table>" in html and "| Instalment" not in html
+    doc = DocxDocument(io.BytesIO(markdown_to_docx(md, "t")))
+    assert len(doc.tables) == 1 and doc.tables[0].cell(1, 0).text == "30%"
+    # Pipes in ordinary text and inside code blocks are left alone
+    plain = "a | b\n\n```\nx | y\n|---|---|\n```"
+    assert "<table>" not in markdown_to_html(plain, "t")
 
 
 def test_extract_unsupported_and_empty():

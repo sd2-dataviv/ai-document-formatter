@@ -11,7 +11,7 @@ result stream in, edit it, and export to **DOCX, PDF, HTML or Markdown**. Every 
 - **Background jobs**: formatting continues if the browser closes or the network drops. The UI reconnects automatically, and opening a running document re-attaches to its live progress.
 - **GPU-aware queue**: by default one document is formatted at a time and the rest wait in line with live position updates. The queue has a size limit, and requests beyond it get HTTP 429.
 - **Cancel** running or queued jobs. If a re-format fails or is cancelled, the previous good result is kept.
-- **11 built-in templates** (updated automatically on upgrade), plus custom templates.
+- **13 built-in templates**, including Letterhead and Contract / Agreement (updated automatically on upgrade), plus custom templates.
 - **File upload**: PDF, DOCX, TXT, MD, HTML, CSV, JSON, YAML, RST.
 - **Long documents** are split on paragraph boundaries. Later parts receive the outline written so far, so the structure continues instead of restarting.
 - **Edit** the Markdown, **export** it to Word, PDF, HTML or Markdown, and **search** your history. Documents have deep links (`/#/doc/12`).

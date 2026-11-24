@@ -23,6 +23,42 @@ _md = (
 )
 
 
+_CODE_FENCE_RE = re.compile(r"^\s*(```|~~~)")
+_DELIM_CELL_RE = re.compile(r"^\s*:?-+:?\s*$")
+
+
+def _is_table_delimiter(line: str) -> bool:
+    if "|" not in line:
+        return False
+    cells = line.strip().strip("|").split("|")
+    return all(_DELIM_CELL_RE.match(c) for c in cells)
+
+
+def _parse_ready(markdown: str) -> str:
+    """Put a blank line before tables that directly follow a paragraph line.
+
+    GFM (and the in-app preview) lets a table interrupt a paragraph, but markdown-it does not,
+    so such tables would otherwise be exported as literal pipe text.
+    """
+    lines = markdown.split("\n")
+    out: list[str] = []
+    in_code = False
+    for i, line in enumerate(lines):
+        if _CODE_FENCE_RE.match(line):
+            in_code = not in_code
+        elif (
+            not in_code
+            and "|" in line
+            and out
+            and out[-1].strip()
+            and i + 1 < len(lines)
+            and _is_table_delimiter(lines[i + 1])
+        ):
+            out.append("")
+        out.append(line)
+    return "\n".join(out)
+
+
 def safe_filename(title: str, ext: str) -> str:
     base = re.sub(r"[^\w\- ]+", "", title).strip().replace(" ", "_")[:80] or "document"
     return f"{base}.{ext}"
@@ -53,7 +89,7 @@ ul.contains-task-list { list-style: none; padding-left: 1.2em; }
 
 
 def markdown_to_html_fragment(markdown: str) -> str:
-    return _md.render(markdown)
+    return _md.render(_parse_ready(markdown))
 
 
 def markdown_to_html(markdown: str, title: str) -> str:
@@ -302,7 +338,7 @@ def markdown_to_docx(markdown: str, title: str) -> bytes:
         section.left_margin = section.right_margin = Inches(1)
         section.top_margin = section.bottom_margin = Inches(0.9)
 
-    tokens = _md.parse(markdown)
+    tokens = _md.parse(_parse_ready(markdown))
     list_stack: list[dict] = []  # {"ordered": bool, "counter": int}
     item_first_para: list[bool] = []
     quote_depth = 0

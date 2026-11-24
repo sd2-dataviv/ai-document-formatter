@@ -1,5 +1,7 @@
 import {
   Briefcase,
+  Building2,
+  Handshake,
   Code,
   FileText,
   GraduationCap,
@@ -31,6 +33,8 @@ export const TEMPLATE_ICONS: Record<string, LucideIcon> = {
   newspaper: Newspaper,
   wand: Wand2,
   "file-text": FileText,
+  building: Building2,
+  handshake: Handshake,
 };
 
 export function TemplateIcon({ name, className }: { name: string; className?: string }) {

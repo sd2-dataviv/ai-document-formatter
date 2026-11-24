@@ -68,7 +68,8 @@ async def test_unhandled_errors_return_json_500(client, monkeypatch):
 async def test_builtin_templates_are_seeded_and_read_only(client):
     templates = (await client.get("/api/templates")).json()
     builtin = [t for t in templates if t["is_builtin"]]
-    assert len(builtin) == 11
+    assert len(builtin) == 13
+    assert {"letterhead", "contract"} <= {t["slug"] for t in builtin}
     assert builtin[0]["slug"] == "clean-structure"
     assert (await client.put(f"/api/templates/{builtin[0]['id']}", json={"name": "x"})).status_code == 403
     assert (await client.delete(f"/api/templates/{builtin[0]['id']}")).status_code == 403
