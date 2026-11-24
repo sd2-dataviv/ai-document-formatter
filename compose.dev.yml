@@ -1,0 +1,25 @@
+# Local development database only (API and UI run natively; see README).
+#   docker compose -f compose.dev.yml up -d
+name: docformatter-dev
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: docformatter-dev-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docformatter
+      POSTGRES_PASSWORD: docformatter
+      POSTGRES_DB: docformatter
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docformatter -d docformatter"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

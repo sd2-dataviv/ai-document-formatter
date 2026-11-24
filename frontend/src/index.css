@@ -1,0 +1,112 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Dark mode follows a `.dark` class on <html> (set by public/theme-init.js and src/theme.ts) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+}
+
+/* ------------------------------------------------------------------ semantic utilities
+   Each pairs its light and dark appearance so components stay readable. */
+
+@utility card {
+  @apply rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none;
+}
+
+@utility surface {
+  @apply bg-white dark:bg-slate-900;
+}
+
+@utility divider {
+  @apply border-slate-100 dark:border-slate-800;
+}
+
+@utility field {
+  @apply w-full rounded-lg border border-slate-200 bg-white text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/25;
+}
+
+@utility btn-outline {
+  @apply flex items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800;
+}
+
+@utility segmented {
+  @apply flex rounded-lg bg-slate-100 p-0.5 dark:bg-slate-800;
+}
+
+@utility seg-on {
+  @apply bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white;
+}
+
+@utility seg-off {
+  @apply text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200;
+}
+
+@utility popover {
+  @apply rounded-xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/40;
+}
+
+@utility hover-row {
+  @apply hover:bg-slate-50 dark:hover:bg-slate-800/60;
+}
+
+@utility selected {
+  @apply bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300;
+}
+
+@utility ink-strong {
+  @apply text-slate-900 dark:text-slate-100;
+}
+
+@utility ink {
+  @apply text-slate-700 dark:text-slate-300;
+}
+
+@utility ink-muted {
+  @apply text-slate-500 dark:text-slate-400;
+}
+
+@utility ink-faint {
+  @apply text-slate-400 dark:text-slate-500;
+}
+
+/* ------------------------------------------------------------------ base */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(203 213 225) transparent;
+}
+
+.dark * {
+  scrollbar-color: rgb(51 65 85) transparent;
+}
+
+.blink-caret::after {
+  content: "▍";
+  margin-left: 2px;
+  color: rgb(99 102 241);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.doc-prose table {
+  display: block;
+  overflow-x: auto;
+}
