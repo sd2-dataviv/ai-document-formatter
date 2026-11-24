@@ -19,7 +19,10 @@ RUN pip install -r requirements.txt
 COPY alembic.ini ./
 COPY alembic ./alembic
 COPY app ./app
-COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+# chmod in a RUN step, not `COPY --chmod`: that flag needs BuildKit, and WorkflowHub
+# builds with the legacy builder.
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
 
 USER app
 EXPOSE 8000

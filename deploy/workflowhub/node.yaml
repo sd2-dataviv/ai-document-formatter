@@ -1,0 +1,8 @@
+name: AI Document Formatter
+key: ai-document-formatter   # permanent id: never rename it (re-uploading the same key makes a new version)
+description: Turns raw text or uploaded documents into cleanly formatted documents using an LLM and reusable templates.
+
+# An APPLICATION: there is no `path`, and no inputs/outputs.
+entrypoint:
+  type: http
+  port: 8080   # container port of the `web` service (nginx-unprivileged)

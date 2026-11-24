@@ -15,3 +15,7 @@ frontend/dist/
 
 # Backups
 backups/
+
+# WorkflowHub upload package
+deploy/workflowhub/.env
+dist-workflowhub/
